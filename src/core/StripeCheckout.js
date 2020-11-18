@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { isAuthenticated } from '../auth/helper';
 import { cartEmpty, loadCart } from './helper/CartHelper';
@@ -44,16 +44,23 @@ const StripeCheckout = ({products,
             headers: headers,
             body: JSON.stringify(body)
         }).then(response => {
+            const orderData = {
+                products: products,
+                transaction_id: response.transaction.id,
+                amount: response.transaction.amount
+            }
+            createOrder(userId, token, orderData);
             console.log(response);
             const { status } = response;
-            // cartEmpty()
+            cartEmpty()
+            setReload(!reload)
         }).catch(error => console.log(error));
     }
 
     const showStripeButton = () => {
         return isAuthenticated() ? (
             <StripeCheckoutButton
-                stripeKey = {process.env.REACT_APP_STRIPE_PUBLISH_KEY}
+                stripeKey = {`${process.env.REACT_APP_STRIPE_PUBLISH_KEY}`}
                 token = {makePayment}
                 amount = {getCartAmount() * 100}
                 name = "Buy Product"
@@ -71,7 +78,7 @@ const StripeCheckout = ({products,
 
     return (
         <div>
-            <h3 className="text-white">Checkout using Stripe</h3>
+            <h3 className="text-white">Your bill is ${getCartAmount()}, checkout using Stripe</h3>
             {showStripeButton()}
         </div>
     )

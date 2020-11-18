@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import {API} from '../backend'
 import "../styles.css"
 import Base from './Base'
 import Card from './Card'
@@ -41,7 +40,15 @@ const Cart = () => {
         return(
             <div>
                 <h2>Checkout Section</h2>
+                <br/>
+                <StripeCheckout 
+                    products = {products}
+                    setReload = {setReload}
+                />
+                <br/>
+                <PaypalCheckout products={products} setReload={setReload} />
             </div>
+            
         )
     };
 
@@ -56,15 +63,11 @@ const Cart = () => {
                     )}
                 </div>
                 <div className="col-6">
-                    {loadCheckout()}
-                    <br/>
-                    <StripeCheckout 
-                        products = {products}
-                        setReload = {setReload}
-                    />
-                    <br/>
-                    {console.log("List of products after stripe", products)}
-                    <PaypalCheckout products={products} setReload={setReload} />
+                    {products.length > 0 ? (
+                        loadCheckout()
+                    ) : (
+                        <div></div>
+                    )}
                 </div>
             </div>
         </Base>

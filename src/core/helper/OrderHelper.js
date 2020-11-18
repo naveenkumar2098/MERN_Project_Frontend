@@ -1,6 +1,6 @@
 const { API } = require("../../backend");
 
-export const createOrder = (userId, token, orderData) => {
+const createOrder = (userId, token, orderData) => {
     return fetch(`${API}/order/create/${userId}`, {
         method: "POST",
         headers: {
@@ -13,3 +13,5 @@ export const createOrder = (userId, token, orderData) => {
         return response.json();
     }).catch(err => console.log(err));
 };
+
+export default createOrder;
